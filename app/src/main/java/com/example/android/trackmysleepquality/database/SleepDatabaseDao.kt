@@ -29,7 +29,7 @@ import androidx.room.Update
 interface SleepDatabaseDao {
 
     @Insert
-    suspend fun insert(night: SleepNight)
+     fun insert(night: SleepNight)
 
     /**
      * When updating a row with a value already set in a column,
@@ -38,7 +38,7 @@ interface SleepDatabaseDao {
      * @param night new value to write
      */
     @Update
-    suspend fun update(night: SleepNight)
+     fun update(night: SleepNight)
 
     /**
      * Selects and returns the row that matches the supplied start time, which is our key.
@@ -68,7 +68,7 @@ interface SleepDatabaseDao {
      * Selects and returns the latest night.
      */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
-    suspend fun getTonight(): SleepNight?
+     fun getTonight(): SleepNight?
 
 }
 
