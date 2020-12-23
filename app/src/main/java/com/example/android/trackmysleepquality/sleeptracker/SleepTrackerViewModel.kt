@@ -42,12 +42,12 @@ class SleepTrackerViewModel(
 
     //DONE (04) Define a variable, nights. Then getAllNights() from the database
     //and assign to the nights variable.
-    private var nights = database.getAllNights()
+    private val nights = database.getAllNights()
 
-    var nightsString = Transformations.map(nights, { sleepNights ->
+    var nightsString = Transformations.map(nights) { sleepNights ->
         formatNights(sleepNights, application.resources)
     }
-    )
+
 
     //DONE (05) In an init block, initializeTonight(), and implement it to launch a coroutine
     //to getTonightFromDatabase().
@@ -75,7 +75,7 @@ class SleepTrackerViewModel(
         viewModelScope.launch {
             val newNight = SleepNight()
             insert(newNight)
-            tonight.value = newNight
+            tonight.value = getTonightFromDatabase()
         }
     }
 
