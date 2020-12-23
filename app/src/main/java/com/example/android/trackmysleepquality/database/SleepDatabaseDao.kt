@@ -28,27 +28,27 @@ interface SleepDatabaseDao {
 
     // DONE (02) Add annotated insert() method for inserting a single SleepNight.
     @Insert
-    fun insert(night: SleepNight)
+    suspend fun insert(night: SleepNight)
 
     // DONE (03) Add annotated update() method for updating a SleepNight.
     @Update
-    fun update(night: SleepNight)
+    suspend fun update(night: SleepNight)
 
     // DONE (04) Add annotated get() method that gets the SleepNight by key.
     @Query("select * from daily_sleep_quality_table where nightId=:key")
-    fun getSleepNight(key: Long): SleepNight?
+    suspend fun getSleepNight(key: Long): SleepNight?
 
     // DONE (05) Add annotated clear() method and query.
     @Query("delete from daily_sleep_quality_table")
-    fun clear()
+    suspend fun clear()
 
     // DONE (06) Add annotated getAllNights() method and query.
     @Query("select * from daily_sleep_quality_table order by nightId desc")
-    fun getAllNights(): LiveData<List<SleepNight>>
+    suspend fun getAllNights(): LiveData<List<SleepNight>>
 
     // DONE (07) Add annotated getTonight() method and query.
     @Query("select * from daily_sleep_quality_table order by nightId desc limit 1")
-    fun getTonight(): SleepNight?
+    suspend fun getTonight(): SleepNight?
 
 }
 
