@@ -17,11 +17,7 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
@@ -45,15 +41,34 @@ class SleepTrackerViewModel(
         formatNights(nights, application.resources)
     }
 
-    //TODO (02)  Create three corresponding state variables. Assign them a Transformations
+    //DONE (02)  Create three corresponding state variables. Assign them a Transformations
     //that tests it against the value of tonight.
+    val startButtonEnabled = Transformations.map(tonight) {
+        null == it
+    }
 
-    //TODO (03) Verify app build and runs without errors.
+    val stopButtonEnabled = Transformations.map(tonight) {
+        null != it
+    }
 
-    //TODO (04) Using the familiar pattern, create encapsulated showSnackBarEvent variable
+    val clearButtonEnabled = Transformations.map(nights) {
+        it?.isNotEmpty()
+    }
+
+    //DONE (03) Verify app build and runs without errors.
+
+    private val _showSnackBarEvent = MutableLiveData<Boolean>()
+    val showSnackBarEvent: LiveData<Boolean>
+        get() = _showSnackBarEvent
+
+    fun doneShowingSnackBar() {
+        _showSnackBarEvent.value = false
+    }
+
+    //DONE (04) Using the familiar pattern, create encapsulated showSnackBarEvent variable
     //and doneShowingSnackbar() fuction.
 
-    //TODO (06) In onClear(), set the value of _showOnSnackbarEvent to true.
+    //DOEN (06) In onClear(), set the value of _showOnSnackbarEvent to true.
 
     /**
      * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
@@ -96,24 +111,24 @@ class SleepTrackerViewModel(
      *  recording.
      */
     private suspend fun getTonightFromDatabase(): SleepNight? {
-            var night = database.getTonight()
-            if (night?.endTimeMilli != night?.startTimeMilli) {
-                night = null
-            }
-            return night
+        var night = database.getTonight()
+        if (night?.endTimeMilli != night?.startTimeMilli) {
+            night = null
+        }
+        return night
     }
 
 
     private suspend fun clear() {
-            database.clear() 
+        database.clear()
     }
 
     private suspend fun update(night: SleepNight) {
-            database.update(night)
+        database.update(night)
     }
 
     private suspend fun insert(night: SleepNight) {
-            database.insert(night)
+        database.insert(night)
     }
 
     /**
@@ -162,6 +177,7 @@ class SleepTrackerViewModel(
 
             // And clear tonight since it's no longer in the database
             tonight.value = null
+            _showSnackBarEvent.value = true
         }
     }
 
